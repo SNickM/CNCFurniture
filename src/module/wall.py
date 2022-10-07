@@ -1,10 +1,10 @@
 ####################################################################################
 # Wall - боковая стенка глубиной depth, высотой height и тощиной thinckness
 ####################################################################################
-from shape import Shape
+from src.module.shape import Shape
+
 
 class Wall(Shape):    # боковая стенка
-
     def __init__(self, x0, y0, height, depth, thinckness):
         super().__init__(x0, y0, thinckness, height, depth)     # w x h x d
         self._thinckness = thinckness

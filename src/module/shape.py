@@ -3,6 +3,7 @@
 ####################################################################################
 from src.module.startpoint import StartPoint
 
+
 class Shape(StartPoint):  # 2Д форма: стенки, крышка, дно, полка
     # границы полей фрезерного станка
     MAX_X = 1000 - 20
@@ -40,6 +41,7 @@ class Shape(StartPoint):  # 2Д форма: стенки, крышка, дно, 
         if self._depth + self.z0 > self.MAX_Z:
             raise Exception("Размер по Z превышает допустимое значение...")
         return True
+
 
 if __name__ == '__main__':
     sh = Shape(10, 10, 420, 480, 520)

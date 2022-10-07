@@ -58,3 +58,4 @@ if __name__ == '__main__':
 
     pt1 = StartPoint()
     print(pt1.x0, pt1.y0, pt1.z0)
+
