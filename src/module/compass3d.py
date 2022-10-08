@@ -25,6 +25,7 @@ class Compass3D:
 
         #  Подключим описание интерфейсов API7
         self.kompas_api7_module = gencache.EnsureModule("{69AC2981-37C0-4379-84FD-5DD2F3C0A520}", 0, 1, 0)
+
         self.application = self.kompas_api7_module.IApplication(
             Dispatch("Kompas.Application.7")._oleobj_.QueryInterface(self.kompas_api7_module.IApplication.CLSID,
                                                                      pythoncom.IID_IDispatch))
@@ -73,7 +74,7 @@ if __name__ == '__main__':
 
     # тестовый  массив точек
     pt = [Point2D(-10, -10), Point2D(-100, -100), Point2D(100, 200), Point2D(300, 100), Point2D(400, 400)]
-    pt.append(Point2D(-400,300))    # добавить еще одну координату
+    pt.append(Point2D(-400, 300))    # добавить еще одну координату
 
     s = Compass3D()
 
