@@ -3,7 +3,9 @@
 ####################################################################################
 
 class Point2D:
-    def __init__(self, x, y):
+    __slots__ = {'_x', '_y'}
+
+    def __init__(self, x=0, y=0):
         self._x = x
         self._y = y
 
@@ -30,9 +32,11 @@ class Point2D:
 
 if __name__ == '__main__':
     pt2d = Point2D(10, 10)
-    print(pt2d.__dict__)
+    print(pt2d.__slots__)
     print(pt2d.x, pt2d.y)
 
     pt2d.x = 20
     pt2d.y = 30
     print(pt2d.x, pt2d.y)
+
+
