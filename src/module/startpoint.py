@@ -28,12 +28,12 @@ class StartPoint:
     def y0(self, y0):
         self._y0 = y0
 
-    # геттер для y0
+    # геттер для z0
     @property
     def z0(self):
         return self._z0
 
-    # сеттер для y0
+    # сеттер для z0
     #@z0.setter
     #def z0(self, z0):
     #    self._z0 = z0
