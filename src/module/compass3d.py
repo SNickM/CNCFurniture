@@ -6,6 +6,7 @@ from win32com.client import Dispatch, gencache
 
 import src.module.compassfile.LDefin2D
 import src.module.compassfile.MiscellaneousHelpers as MH
+from src.module.point2d import Point2D
 
 
 class Compass3D:
@@ -34,84 +35,54 @@ class Compass3D:
         self.kompas_document = self.application.ActiveDocument
         self.kompas_document_2d = self.kompas_api7_module.IKompasDocument2D(self.kompas_document)
         self.iDocument2D = self.kompas_object.ActiveDocument2D()
-
-    # рисование линии по координатам
-    def draw_line_coords(self, x1, y1, x2, y2):
         self.obj = 0
-        self.obj = self.iDocument2D.ksLineSeg(x1, y1, x2, y2, 1)
 
-    # рисование линии по координатам из массива
-    def draw_line(self, line):
-        self.obj = 0
-        self.obj = self.iDocument2D.ksLineSeg(line[0], line[1], line[2], line[3], 1)
+    # рисование линии по координатам точек
+    def draw_line(self, pt1, pt2):
+        self.obj = self.iDocument2D.ksLineSeg(pt1.x, pt1.y, pt2.x, pt2.y, 1)
 
-    # рисование окружности по координатам и радиусу
-    def draw_circle_coords(self, x, y, r):
-        obj = self.iDocument2D.ksCircle(x, y, r, 1)
+    # рисование окружности по координате центра и радиусу
+    def draw_circle(self, pt, radius):
+        self.obj = self.iDocument2D.ksCircle(pt.x, pt.y, radius, 1)
 
-    # рисование окружности по данным из массива [x, y, radius]
-    def draw_circle(self, circle):
-        obj = self.iDocument2D.ksCircle(circle[0], circle[1], circle[2], 1)
+    # рисование объкта из прямых линий по координатам из массива точек
+    def draw_object(self, pt_array):
+        if len(pt_array) < 2:
+            raise Exception("Координат точек должно быть миниму 2")
+        for i in range(0, len(pt_array)-1):     # количество отрезков меньше на 1, чем точек
+            self.obj = self.iDocument2D.ksLineSeg(pt_array[i].x, pt_array[i].y,
+                                                  pt_array[i+1].x, pt_array[i+1].y, 1)
 
-    # рисование объкта из прямых линий
-    def draw_object(self, line_array):
-        #self.line_array = line_array
-        self.obj = 0
-        for i in range(0, len(line_array)):
-            self.obj = self.iDocument2D.ksLineSeg(line_array[i][0], line_array[i][1],
-                                                  line_array[i][2], line_array[i][3], 1)
-
-    # рисование прямоугольника по координатам
-    def draw_rectangle_coords(self, x1, y1, x2,y2):
-
+    # рисование прямоугольника по координатам противоположных вершин
+    def draw_rectangle(self, pt1, pt2):
         # нижняя горизонтальная
-        self.obj = self.iDocument2D.ksLineSeg(x1, y1, x2, y1, 1)
+        self.obj = self.iDocument2D.ksLineSeg(pt1.x, pt1.y, pt2.x, pt1.y, 1)
         # верхняя горизонтальная
-        self.obj = self.iDocument2D.ksLineSeg(x1, y2, x2, y2, 1)
+        self.obj = self.iDocument2D.ksLineSeg(pt1.x, pt2.y, pt2.x, pt2.y, 1)
         # левая вертикальная
-        self.obj = self.iDocument2D.ksLineSeg(x1, y1, x1, y2, 1)
+        self.obj = self.iDocument2D.ksLineSeg(pt1.x, pt1.y, pt1.x, pt2.y, 1)
         # правая вертикальная
-        self.obj = self.iDocument2D.ksLineSeg(x2, y1, x2, y2, 1)
-
-    # рисование прямоугольника по массиву точек
-    def draw_rectangle(self, line_array):
-
-        # нижняя горизонтальная
-        self.obj = self.iDocument2D.ksLineSeg(line_array[0][0], line_array[0][1],
-                                              line_array[1][0], line_array[0][1], 1)
-        # верхняя горизонтальная
-        self.obj = self.iDocument2D.ksLineSeg(line_array[0][0], line_array[1][1],
-                                              line_array[1][0], line_array[1][1], 1)
-
-        # левая вертикальная
-        self.obj = self.iDocument2D.ksLineSeg(line_array[0][0], line_array[0][1],
-                                              line_array[0][0], line_array[1][1], 1)
-        # правая вертикальная
-        self.obj = self.iDocument2D.ksLineSeg(line_array[1][0], line_array[0][1],
-                                              line_array[1][0], line_array[1][1], 1)
-
-
-    def draw_cottom(self):
-        pass
+        self.obj = self.iDocument2D.ksLineSeg(pt2.x, pt1.y, pt2.x, pt2.y, 1)
 
 
 if __name__ == '__main__':
-    L = [[10, 10, 100, 100], [100, 100, 400, 150]]
-    L1 = [[10, 10], [100, 100], [100, 100], [200, 200]]
-    L2 = [0, 0, 120, 350]
+
+    # тестовые объкты точек
+    pt1 = Point2D(10, 10)
+    pt2 = Point2D(100, 100)
+
+    # тестовый  массив точек
+    pt = [Point2D(-10, -10), Point2D(-100, -100), Point2D(100, 200), Point2D(300, 100), Point2D(400, 400)]
+    pt.append(Point2D(-400,300))    # добавить еще одну координату
 
     s = Compass3D()
-    s.draw_object(L)
-    s.draw_rectangle([L1[0], L1[1]])
-    s.draw_rectangle([L1[2], L1[3]])
-    #s.draw_rectangle(L1)
-    s.draw_line(L2)
-    s.draw_line_coords(10, 100, 200, -120)
-    s.draw_rectangle_coords(50, 50, 400, 400)
 
-    s.draw_circle([10, 10, 100])
-    s.draw_circle_coords(100, 100, 200)
+    s.draw_line(pt1, pt2)
+    s.draw_circle(pt1, 200)
+    s.draw_rectangle(pt1, pt2)
+    s.draw_object(pt)
 
-    print(L1)
+
+
 
 
